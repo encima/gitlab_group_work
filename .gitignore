@@ -1,6 +1,7 @@
 #### joe made this: http://goel.io/joe
 gitlab.yaml
 students_*.csv
+.*.sw*
 #####=== Ruby ===#####
 
 *.gem
