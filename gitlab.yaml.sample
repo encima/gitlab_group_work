@@ -1,0 +1,5 @@
+Gitlab:
+  endpoint: https://gitlab.cs.cf.ac.uk/api/v3
+  token: TOKEN
+directory: ~/teaching/CM6122/projects
+group: CM6122
