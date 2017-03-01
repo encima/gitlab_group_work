@@ -61,7 +61,7 @@ def handle_teams(team, config, staff, group)
 		puts student["Project"]
 		member = Gitlab.user_search(student[0])[0]
 		puts member.inspect
-		add_member(student["Project"], student["Team"], member)
+		add_member(student["Project"], student["Team"], member, group)
 		puts "------"
 	end
 	true
