@@ -33,8 +33,8 @@ for p in Gitlab.group_projects(group)
 	system("git clone #{p.http_url_to_repo} repos/#{p.name}")
 	for b in branches
 		begin
-			puts "URL: " + p.http_url_to_repo + ":" + b.name
-			system("cd repos/#{p.name}; git checkout #{b.name}")
+			puts "Branch: " + b.name
+			system("cd repos/#{p.name}; git fetch --all; git checkout #{b.name}")
 			system("cd repos/#{p.name}; gitinspector --since=1.week.ago -F html -HTlrm  > ../../reports/#{p.name}/#{b.name}.html")
 		#using exec exits the current process, always use system!
 			# system("gitinspector --since=1.week.ago -F html -HTlrm -b #{b.name} #{p.http_url_to_repo} > reports/#{p.name}/#{b.name}.html")
