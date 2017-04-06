@@ -2,6 +2,7 @@
 gitlab.yaml
 /repos/
 /reports/
+/class_test/
 students_*.csv
 .*.sw*
 #####=== Ruby ===#####

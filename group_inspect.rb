@@ -35,7 +35,9 @@ for p in Gitlab.group_projects(group)
 		begin
 			puts "Branch: " + b.name
 			system("cd repos/#{p.name}; git fetch --all; git checkout #{b.name}")
+			branch_name = b.name.gsub! '/', '_'
 			system("cd repos/#{p.name}; gitinspector --since=1.week.ago -F html -HTlrm  > ../../reports/#{p.name}/#{b.name}.html")
+			system("cd repos/#{p.name}; git standup -f -m 8 -a \"all\" -d 7  > ../../reports/#{p.name}/#{p.name}.txt")
 		#using exec exits the current process, always use system!
 			# system("gitinspector --since=1.week.ago -F html -HTlrm -b #{b.name} #{p.http_url_to_repo} > reports/#{p.name}/#{b.name}.html")
 		rescue Exception => e
