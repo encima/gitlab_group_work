@@ -23,10 +23,11 @@ module Utils
 		repo = "#{MODULE}_#{project}_#{member.username}"
 		puts repo
 		begin
-			proj = gl.project_search(repo)
-			gl.remove_team_member(project, member.id)
-			system("git clone #{project.http_url_to_repo} class_test/#{project.name}")
-		rescue
+			proj = gl.project_search(repo)[0]
+			gl.remove_team_member(proj.id, member.id)
+			system("git clone #{proj.http_url_to_repo} class_test/#{proj.name}")
+		rescue => error
+			puts error
 			puts "Issue removing member from project"
 		end
 	end
