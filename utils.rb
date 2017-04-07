@@ -19,6 +19,10 @@ module Utils
 		end
 	end 
 
+	def get_proj_from_member(gl,member, proj_name)
+		
+	end 
+
 	def self.remove_team_member(gl, member, project)
 		repo = "#{MODULE}_#{project}_#{member.username}"
 		puts repo
