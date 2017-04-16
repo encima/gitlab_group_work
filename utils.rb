@@ -34,7 +34,7 @@ module Utils
 		begin
 			proj = gl.project_search(repo)[0]
 			gl.remove_team_member(proj.id, member.id)
-			system("git clone #{proj.http_url_to_repo} class_test/#{proj.name}")
+			system("git clone #{proj.http_url_to_repo} repos/#{proj.name}")
 		rescue => error
 			puts error
 			puts "Issue removing member from project"

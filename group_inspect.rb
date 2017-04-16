@@ -8,7 +8,7 @@ MODULE = config["module"]
 group = "#{MODULE}_project"
 
 # set a user private token
-Gitlab.private_token = config["Gitlab"]["token"]
+Gitlab.private_token = ENV['GITLAB_TOKEN']
 Gitlab.endpoint =  config["Gitlab"]["endpoint"]
 
 # initialize a new client
