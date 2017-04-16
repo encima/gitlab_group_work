@@ -1,6 +1,11 @@
-require 'Gitlab'
+require 'gitlab'
 
 module Utils 
+
+	GUEST = 10
+	MASTER = 40
+	DESC = "A repository where you will be expected to submit all parts of your coursework"
+
 	def self.remove_group_member(gl, group, member)
 		puts "Removing #{member.username} from #{group.name}"
 		begin
@@ -50,8 +55,9 @@ module Utils
 	end
 
 	# create a repo, add it to cwk group and assign member. Add README file to repo
-	def self.add_member(gl, project, suffix, member, cwk_group, add_to_group)
-		repo = "#{MODULE}_#{project}_#{suffix}"
+	def self.add_member(gl, project, suffix, member, cwk_group, add_to_group, repo)
+		repo_name = "#{repo}_#{suffix}"
+		puts repo_name
 		if add_to_group
 			begin
 				gl.add_group_member(cwk_group.id, member.id, GUEST)
@@ -60,36 +66,34 @@ module Utils
 			end
 		end
 		begin
-			proj = gl.create_project(repo, {namespace_id: cwk_group.id})
+			proj = gl.create_project(repo_name, {namespace_id: cwk_group.id})
 			puts "Created #{repo}"
-			puts member.inspect
 			gl.add_team_member(proj.id, member.id, MASTER)
 			#TODO pass readme string to commit
 			gl.create_file(proj.id, "README", "master", "Please ONLY commit the app files here. There should only be an app folder in the root of this repo (and a README). Commits before the start of the class test (and after the end) will result in failure", "Initial commit test")
 		rescue => error
 			puts error
 			proj = gl.project_search(repo)[0]
-			puts proj.inspect
 			gl.add_team_member(proj.id, member.id, MASTER)
 		end
 		true
 	end
 
-	def self.handle_individual(gl, repo_name, config, staff, group)
+	def self.handle_individual(gl, config, repo_name, staff, group)
 		students = CSV.read(config["students"], headers:true)
 		student_keys = students.headers
 		for student in students do
 			member = gl.user_search(student[0])[0]
-			add_member(gl, repo_name, "#{member.username}", member, group, false)
+			add_member(gl, repo_name, "#{member.username}", member, group, false, repo)
 			for s in staff do
-				add_member(gl, repo_name, "#{member.username}", s, group, true)
+				add_member(gl, repo_name, "#{member.username}", s, group, true, repo)
 			end
 			puts "------"
 		end
 		true
 	end
 
-	def self.handle_groups(gl, config, staff, group)
+	def self.handle_groups(gl, config, repo, staff, group)
 		students = CSV.read(config["students"], headers:true)
 		student_keys = students.headers
 		team = 0
@@ -100,10 +104,9 @@ module Utils
 				puts "Changing team to #{team}"
 			end
 			member = gl.user_search(student[0])[0]
-			puts member.inspect
-			add_member(student["project"], student["Team"], member, group, false)
+			add_member(gl, student["project"], student["Team"], member, group, false, repo)
 			for s in staff do
-				add_member(student["project"], student["team"], s, group, true)
+				add_member(gl, student["project"], student["team"], s, group, true, repo)
 			end
 			puts "------"
 		end
